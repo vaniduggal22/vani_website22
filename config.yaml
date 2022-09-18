@@ -89,7 +89,7 @@ params:
         url: blogs/tempus
       - image: pic03.jpg
         subtitle: Lorem Etiam Nullam
-        title: Magna
+        title: San Francisco Rent Analysis
         url: blogs/magna
       - image: pic04.jpg
         subtitle: Nisl Sed Aliquam

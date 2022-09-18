@@ -1,0 +1,170 @@
+---
+title: "San Francisco Rent Analysis"
+description: "Lorem Etiam Nullam"
+slug: "magna"
+image: pic09.jpg
+keywords: ""
+categories: 
+    - ""
+    - ""
+date: 2017-10-31T22:26:09-05:00
+draft: false
+---
+
+```{r, setup, echo=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3, scipen = 999)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=9, 
+  fig.height=5,  #6.75 was original
+  fig.align = "center"
+)
+```
+
+```{r load-libraries, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(lubridate)
+library(here)
+library(skimr)
+library(janitor)
+library(vroom)
+library(tidyquant)
+library(knitr)
+library(ggrepel)
+library(spotifyr)
+library(tidytext)
+```
+
+# Rents in San Francisco 2000-2018
+
+```{r}
+# download directly off tidytuesdaygithub repo
+
+rent <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-07-05/rent.csv')
+
+```
+
+## What are the variable types? Do they all correspond to what they really are? Which variables have most missing values?
+
+```{r skim_data}
+
+skim(rent)
+glimpse(rent)
+
+```
+
+**Answer:**
+
+-   Variable types: chr & dbl\
+-   Do they correspond: Date could be formatted as \< date \>\
+-   Most missing variable: descr (197542)\
+
+## Make a plot that shows the top 20 cities in terms of % of classifieds between 2000-2018. You need to calculate the number of listings by city, and then convert that number to a %.
+
+
+
+```{r top_cities}
+
+top20 <- rent %>% 
+  count(city, sort=TRUE) %>% 
+  mutate(proportion = n/sum(n)) %>% 
+  slice_max(order_by = proportion, n=20) %>% 
+  mutate(city = fct_reorder(city, proportion))
+  
+ggplot(data = top20, mapping = aes(x=proportion, y=city)) +
+  geom_col() +
+  labs(
+    title = "San Francisco accounts for more than a quarter of all rental classifieds",
+    subtitle = "% of Craigslist listings, 2000-2018",
+    x = NULL,
+    y = NULL,
+    caption="Source: Pennigton, Kate (2018). Bay Area Craiglist Rental Housing Posts, 2000-2018"
+  ) +
+  scale_x_continuous(labels = scales::percent) +
+  theme_light() +
+  theme(panel.border = element_blank())+
+  theme(plot.title = element_text(hjust = -0.35))+
+  theme(plot.subtitle = element_text(hjust = -0.15))
+
+```
+
+## Make a plot that shows the evolution of median prices in San Francisco for 0, 1, 2, and 3 bedrooms listings.
+
+
+
+```{r sf_median_prices}
+
+median_per_bed <- rent %>% 
+  filter(beds <= 3, city == "san francisco") %>% 
+  group_by(beds, year) %>% 
+  summarize(median_price = median(price))
+
+ggplot(median_per_bed, aes(x=year, y=median_price, color = factor(beds))) +
+  geom_line() +
+  facet_wrap(~beds, nrow = 1) +
+  labs(
+    title = "San Francisco rents have steadily been increasing",
+    subtitle = "0 to 3-bed listings, 2000-2018",
+    x=NULL,
+    y=NULL,
+    caption = "Source: Pennigton, Kate (2018). Bay Area Craiglist Rental Housing Posts, 2000-2018"
+  ) +
+  xlim(2003,2018) +
+  theme_light() +
+  theme(legend.position="none") +
+  theme(plot.title = element_text(hjust = 0))+
+  theme(plot.subtitle = element_text(hjust = 0)) +
+  theme(strip.text.x = element_text(colour = "black")) +
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 0.5)) +
+  theme(strip.background = element_rect(color = "black", size = 0.5))
+  
+```
+
+## Finally, make a plot that shows median rental prices for the top 12 cities in the Bay area.
+
+
+
+```{r spirit_plot}
+
+cities_to_include <- rent %>% 
+  group_by(city) %>% 
+  summarize(number_ads = n()) %>%
+  slice_max(order_by = number_ads, n=12)
+
+cities_to_include <- cities_to_include$city
+
+median_per_bed <- rent %>% 
+  filter(beds == 1, city %in% cities_to_include) %>% 
+  group_by(city, year) %>% 
+  summarize(median_price = median(price)) 
+
+ggplot(median_per_bed, aes(x=year, y=median_price, color = factor(city))) +
+  geom_line() +
+  facet_wrap(~city, nrow = 3) +
+  labs(
+    title = "Rental prices for 1-bedroom flats in the Bay Area",
+    x=NULL,
+    y=NULL,
+    caption="Source: Pennigton, Kate (2018). Bay Area Craiglist Rental Housing Posts, 2000-2018"
+  ) +
+  theme_light() +
+  theme(legend.position="none") +
+  theme(plot.title = element_text(hjust = 0)) +
+  theme(strip.text.x = element_text(colour = "black")) +
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 0.5)) +
+  theme(strip.background = element_rect(color = "black", size = 0.5))
+
+```
+
+## What can you infer from these plots? Don't just explain what's in the graph, but speculate or tell a short story (1-2 paragraphs max).
+
+Looking at the graphs from the last exercise we can see that rental prices have increased since the year 2000. While one major cause could be inflation, it is also true that large tech companies have increased the attractiveness of the Bay Area making living there more expensive.\
+The figures also reveal that there has been a decline in the growth rate (or even negative growth) in the median rent after 2015. It could be due to the fact that more and more people are leaving California as the boom seems to lose momentum. A CNBC [video](https://www.youtube.com/watch?v=Ez90rXhMWjE) outlines the reasons for this exodus of people.\
