@@ -48,7 +48,6 @@ library(png)
 library(infer)
 ```
 
-#Download data
 
 ```{r load_technology_data, include=FALSE}
 
