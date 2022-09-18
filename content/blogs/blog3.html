@@ -1,0 +1,200 @@
+---
+title: "Tempus"
+description: ""
+slug: "tempus"
+image: pic08.jpg
+keywords: ""
+categories: 
+    - ""
+    - ""
+date: 2017-10-31T22:26:13-05:00
+draft: false
+---
+
+
+
+<p>The National Bureau of Economic Research (NBER) has a a very interesting
+dataset on the adoption of about 200 technologies in more than 150
+countries since 1800. This is the<a href="https://www.nber.org/research/data/cross-country-historical-adoption-technology">Cross-country Historical Adoption of
+Technology (CHAT) dataset</a>.</p>
+<p>The following is a description of the variables</p>
+<table>
+<thead>
+<tr class="header">
+<th><strong>variable</strong></th>
+<th><strong>class</strong></th>
+<th><strong>description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>variable</td>
+<td>character</td>
+<td>Variable name</td>
+</tr>
+<tr class="even">
+<td>label</td>
+<td>character</td>
+<td>Label for variable</td>
+</tr>
+<tr class="odd">
+<td>iso3c</td>
+<td>character</td>
+<td>Country code</td>
+</tr>
+<tr class="even">
+<td>year</td>
+<td>double</td>
+<td>Year</td>
+</tr>
+<tr class="odd">
+<td>group</td>
+<td>character</td>
+<td>Group (consumption/production)</td>
+</tr>
+<tr class="even">
+<td>category</td>
+<td>character</td>
+<td>Category</td>
+</tr>
+<tr class="odd">
+<td>value</td>
+<td>double</td>
+<td>Value (related to label)</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>technology &lt;- readr::read_csv(&#39;https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-07-19/technology.csv&#39;)
+head(technology, 15)</code></pre>
+<pre><code>## # A tibble: 15 × 7
+##    variable label                                iso3c  year group categ…¹ value
+##    &lt;chr&gt;    &lt;chr&gt;                                &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;   &lt;dbl&gt;
+##  1 BCG      % children who received a BCG immun… AFG    1982 Cons… Vaccin…    10
+##  2 BCG      % children who received a BCG immun… AFG    1983 Cons… Vaccin…    10
+##  3 BCG      % children who received a BCG immun… AFG    1984 Cons… Vaccin…    11
+##  4 BCG      % children who received a BCG immun… AFG    1985 Cons… Vaccin…    17
+##  5 BCG      % children who received a BCG immun… AFG    1986 Cons… Vaccin…    18
+##  6 BCG      % children who received a BCG immun… AFG    1987 Cons… Vaccin…    27
+##  7 BCG      % children who received a BCG immun… AFG    1988 Cons… Vaccin…    40
+##  8 BCG      % children who received a BCG immun… AFG    1989 Cons… Vaccin…    38
+##  9 BCG      % children who received a BCG immun… AFG    1990 Cons… Vaccin…    30
+## 10 BCG      % children who received a BCG immun… AFG    1991 Cons… Vaccin…    21
+## 11 BCG      % children who received a BCG immun… AFG    1992 Cons… Vaccin…    19
+## 12 BCG      % children who received a BCG immun… AFG    1993 Cons… Vaccin…    17
+## 13 BCG      % children who received a BCG immun… AFG    1994 Cons… Vaccin…    15
+## 14 BCG      % children who received a BCG immun… AFG    1995 Cons… Vaccin…    31
+## 15 BCG      % children who received a BCG immun… AFG    1996 Cons… Vaccin…    47
+## # … with abbreviated variable name ¹​category</code></pre>
+<pre class="r"><code>#get all technologies
+labels &lt;- technology %&gt;% 
+  distinct(variable, label)
+labels</code></pre>
+<pre><code>## # A tibble: 195 × 2
+##    variable label                                       
+##    &lt;chr&gt;    &lt;chr&gt;                                       
+##  1 BCG      % children who received a BCG immunization  
+##  2 DPT      % children who received a DPT immunization  
+##  3 HepB3    % children who received a hepb3 immunization
+##  4 Hib3     % children who received a Hib3 immunization 
+##  5 IPV1     % children who received a IPV1 immunization 
+##  6 MCV1     % children who received a MCV1 immunization 
+##  7 MCV2     % children who received a MCV2 immunization 
+##  8 PCV3     % children who received a PCV3 immunization 
+##  9 Pol3     % children who received a Pol3 immunization 
+## 10 RCV1     % children who received a RCV1 immunization 
+## # … with 185 more rows</code></pre>
+<pre class="r"><code># Get country names using &#39;countrycode&#39; package
+technology &lt;- technology %&gt;% 
+  filter(iso3c != &quot;XCD&quot;) %&gt;% 
+  mutate(iso3c = recode(iso3c, &quot;ROM&quot; = &quot;ROU&quot;),
+         country = countrycode(iso3c, origin = &quot;iso3c&quot;, destination = &quot;country.name&quot;),
+         country = case_when(
+           iso3c == &quot;ANT&quot; ~ &quot;Netherlands Antilles&quot;,
+           iso3c == &quot;CSK&quot; ~ &quot;Czechoslovakia&quot;,
+           iso3c == &quot;XKX&quot; ~ &quot;Kosovo&quot;,
+           TRUE           ~ country))
+
+#make smaller dataframe on energy
+energy &lt;- technology %&gt;% 
+  filter(category == &quot;Energy&quot;)
+energy</code></pre>
+<pre><code>## # A tibble: 66,748 × 8
+##    variable  label                       iso3c  year group categ…¹ value country
+##    &lt;chr&gt;     &lt;chr&gt;                       &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;  
+##  1 elec_coal Electricity from coal (TWH) ABW    2000 Prod… Energy      0 Aruba  
+##  2 elec_coal Electricity from coal (TWH) ABW    2001 Prod… Energy      0 Aruba  
+##  3 elec_coal Electricity from coal (TWH) ABW    2002 Prod… Energy      0 Aruba  
+##  4 elec_coal Electricity from coal (TWH) ABW    2003 Prod… Energy      0 Aruba  
+##  5 elec_coal Electricity from coal (TWH) ABW    2004 Prod… Energy      0 Aruba  
+##  6 elec_coal Electricity from coal (TWH) ABW    2005 Prod… Energy      0 Aruba  
+##  7 elec_coal Electricity from coal (TWH) ABW    2006 Prod… Energy      0 Aruba  
+##  8 elec_coal Electricity from coal (TWH) ABW    2007 Prod… Energy      0 Aruba  
+##  9 elec_coal Electricity from coal (TWH) ABW    2008 Prod… Energy      0 Aruba  
+## 10 elec_coal Electricity from coal (TWH) ABW    2009 Prod… Energy      0 Aruba  
+## # … with 66,738 more rows, and abbreviated variable name ¹​category</code></pre>
+<pre class="r"><code># download CO2 per capita from World Bank using {wbstats} package
+# https://data.worldbank.org/indicator/EN.ATM.CO2E.PC
+co2_percap &lt;- wb_data(country = &quot;countries_only&quot;, 
+                      indicator = &quot;EN.ATM.CO2E.PC&quot;, 
+                      start_date = 1970, 
+                      end_date = 2022,
+                      return_wide=FALSE) %&gt;% 
+  filter(!is.na(value)) %&gt;% 
+  #drop unwanted variables
+  rename(year = date)%&gt;%
+  select(-c(unit, obs_status, footnote, last_updated))
+
+head(co2_percap,10)</code></pre>
+<pre><code>## # A tibble: 10 × 7
+##    indicator_id   indicator                      iso2c iso3c country  year value
+##    &lt;chr&gt;          &lt;chr&gt;                          &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;
+##  1 EN.ATM.CO2E.PC CO2 emissions (metric tons pe… AF    AFG   Afghan…  2019 0.160
+##  2 EN.ATM.CO2E.PC CO2 emissions (metric tons pe… AF    AFG   Afghan…  2018 0.163
+##  3 EN.ATM.CO2E.PC CO2 emissions (metric tons pe… AF    AFG   Afghan…  2017 0.132
+##  4 EN.ATM.CO2E.PC CO2 emissions (metric tons pe… AF    AFG   Afghan…  2016 0.150
+##  5 EN.ATM.CO2E.PC CO2 emissions (metric tons pe… AF    AFG   Afghan…  2015 0.173
+##  6 EN.ATM.CO2E.PC CO2 emissions (metric tons pe… AF    AFG   Afghan…  2014 0.146
+##  7 EN.ATM.CO2E.PC CO2 emissions (metric tons pe… AF    AFG   Afghan…  2013 0.186
+##  8 EN.ATM.CO2E.PC CO2 emissions (metric tons pe… AF    AFG   Afghan…  2012 0.259
+##  9 EN.ATM.CO2E.PC CO2 emissions (metric tons pe… AF    AFG   Afghan…  2011 0.297
+## 10 EN.ATM.CO2E.PC CO2 emissions (metric tons pe… AF    AFG   Afghan…  2010 0.244</code></pre>
+<pre class="r"><code># get a list of countries and their characteristics
+# we just want to get the region a country is in and its income level
+countries &lt;-  wb_cachelist$countries %&gt;% 
+  select(iso3c,region,income_level)
+countries</code></pre>
+<pre><code>## # A tibble: 304 × 3
+##    iso3c region                     income_level       
+##    &lt;chr&gt; &lt;chr&gt;                      &lt;chr&gt;              
+##  1 ABW   Latin America &amp; Caribbean  High income        
+##  2 AFG   South Asia                 Low income         
+##  3 AFR   Aggregates                 Aggregates         
+##  4 AGO   Sub-Saharan Africa         Lower middle income
+##  5 ALB   Europe &amp; Central Asia      Upper middle income
+##  6 AND   Europe &amp; Central Asia      High income        
+##  7 ANR   Aggregates                 Aggregates         
+##  8 ARB   Aggregates                 Aggregates         
+##  9 ARE   Middle East &amp; North Africa High income        
+## 10 ARG   Latin America &amp; Caribbean  Upper middle income
+## # … with 294 more rows</code></pre>
+<p>This is a very rich data set, not just for energy and CO2 data, but for many other technologies. In our case, we just need to produce a couple of graphs– at this stage, the emphasis is on data manipulation, rather than making the graphs gorgeous.</p>
+<p>First, produce a graph with the countries with the highest and lowest % contribution of renewables in energy production. This is made up of <code>elec_hydro</code>, <code>elec_solar</code>, <code>elec_wind</code>, and <code>elec_renew_other</code>. You may want to use the <em>patchwork</em> package to assemble the two charts next to each other.</p>
+<p><img src="/blogs/blog3_files/figure-html/min-max_renewables-1.png" width="100%" style="display: block; margin: auto;" />
+Second, you can produce an animation to explore the relationship between CO2 per capita emissions and the deployment of renewables. As the % of energy generated by renewables goes up, do CO2 per capita emissions seem to go down?</p>
+<pre><code>## # A tibble: 4,538 × 9
+## # Groups:   country [199]
+##    country      year percent_contri…¹ indic…² indic…³ iso2c iso3c  value year_…⁴
+##    &lt;chr&gt;       &lt;dbl&gt;            &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;int&gt;
+##  1 Afghanistan  2000            0.668 EN.ATM… CO2 em… AF    AFG   0.0366    2000
+##  2 Afghanistan  2001            0.841 EN.ATM… CO2 em… AF    AFG   0.0338    2001
+##  3 Afghanistan  2002            0.808 EN.ATM… CO2 em… AF    AFG   0.0456    2002
+##  4 Afghanistan  2003            0.671 EN.ATM… CO2 em… AF    AFG   0.0515    2003
+##  5 Afghanistan  2004            0.632 EN.ATM… CO2 em… AF    AFG   0.0417    2004
+##  6 Afghanistan  2005            0.632 EN.ATM… CO2 em… AF    AFG   0.0604    2005
+##  7 Afghanistan  2006            0.761 EN.ATM… CO2 em… AF    AFG   0.0666    2006
+##  8 Afghanistan  2007            0.791 EN.ATM… CO2 em… AF    AFG   0.0653    2007
+##  9 Afghanistan  2008            0.745 EN.ATM… CO2 em… AF    AFG   0.128     2008
+## 10 Afghanistan  2009            0.827 EN.ATM… CO2 em… AF    AFG   0.172     2009
+## # … with 4,528 more rows, and abbreviated variable names ¹​percent_contribution,
+## #   ²​indicator_id, ³​indicator, ⁴​year_new</code></pre>
+<p><img src="/blogs/blog3_files/figure-html/animation-1.gif" width="100%" style="display: block; margin: auto;" /><img src="../../images/animation.gif" width="100%" style="display: block; margin: auto;" /></p>
