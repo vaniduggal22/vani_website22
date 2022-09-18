@@ -49,6 +49,7 @@ library(infer)
 ```
 
 #Download data
+
 ```{r load_technology_data, include=FALSE}
 
 technology <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-07-19/technology.csv')
