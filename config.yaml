@@ -1,4 +1,4 @@
-baseURL: https://kostisportfolio-2021.netlify.app/
+baseURL: https://vaniduggal22.netlify.app/
 languageCode: en-us
 title: Portfolio Website for Vani
 theme: forty
@@ -7,24 +7,24 @@ disqusShortname: ''
 params:
   banner:
     buttonText: Get Started
-    subtitle: |-
+    #subtitle: |-
       A RESPONSIVE SITE TEMPLATE DESIGNED BY HTML5 UP
       AND RELEASED UNDER THE CREATIVE COMMONS.
-    title: Hi, my name is Kostis
+    title: Hi, my name is Vani
   blog: {}
   contact:
     address:
       - city: London
         country: UK
-        street: Regent's Park
+        street: Liverpool Street
         title: Address
     buttonClear: Clear
     buttonSend: Send message
     email:
-      - email: kostis@london.edu
+      - email: vduggal.mam2023@london.edu
     enable: yes
     phone:
-      - phone: (000) 000-0000 x1234
+      - phone: (+44) 7783453874 
         title: Phone
   custom_css: []
   custom_js: []
