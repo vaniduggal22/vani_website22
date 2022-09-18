@@ -100,25 +100,25 @@ disqusShortname = ""
     [[params.tiles.showcase]]
       title = "Renewable Energy Analysis"
       subtitle = "Analysis"
-      image = "pic02.jpg"
+      image = "energy.jpeg"
       url = "blogs/tempus"
 
     [[params.tiles.showcase]]
       title = "San Francisco Rent Analysis"
       subtitle = "Lorem Etiam Nullam"
-      image = "pic03.jpg"
+      image = "sanf.jpeg"
       url = "blogs/magna"
 
     [[params.tiles.showcase]]
       title = "Youth Risk Behavior Analysis"
       subtitle = "Nisl Sed Aliquam"
-      image = "pic04.jpg"
+      image = "youth.jpeg"
       url = "blogs/ipsum"
 
     [[params.tiles.showcase]]
       title = "Climate change and temperature"
       subtitle = "Ipsum Dolor Sit Amet"
-      image = "pic05.jpg"
+      image = "climate.jpeg"
       url = "blogs/consequat"
 
     [[params.tiles.showcase]]

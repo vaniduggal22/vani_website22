@@ -2,7 +2,7 @@
 title: "Climate change and temperature"
 description: ""
 slug: "consequat"
-image: pic07.jpg
+image: climate.jpeg
 keywords: ""
 categories: 
     - ""

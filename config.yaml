@@ -83,19 +83,19 @@ params:
         subtitle: I love sunsets
         title: About me
         url: blogs/aliquam
-      - image: pic02.jpg
+      - image: energy.jpeg
         subtitle: Feugiat Amet Tempus
         title: Renewable Energy Analysis
         url: blogs/tempus
-      - image: pic03.jpg
+      - image: sanf.jpeg
         subtitle: Lorem Etiam Nullam
         title: San Francisco Rent Analysis
         url: blogs/magna
-      - image: pic04.jpg
+      - image: youth.jpeg
         subtitle: Nisl Sed Aliquam
         title: Youth Risk Behavior Analysis
         url: blogs/ipsum
-      - image: pic05.jpg
+      - image: climate.jpeg
         subtitle: Ipsum Dolor Sit Amet
         title: Climate change and temperature
         url: blogs/consequat

@@ -2,7 +2,7 @@
 title: "Renewable Energy Analysis"
 description: ""
 slug: "tempus"
-image: pic08.jpg
+image: energy.jpg
 keywords: ""
 categories: 
     - ""
