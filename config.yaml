@@ -97,8 +97,8 @@ params:
         url: blogs/ipsum
       - image: pic05.jpg
         subtitle: Ipsum Dolor Sit Amet
-        title: Consequat
-        url: blogs/ipsum
+        title: About Me
+        url: blogs/consequat
       - image: pic06.jpg
         subtitle: Feugiat Amet Tempus
         title: Etiam
