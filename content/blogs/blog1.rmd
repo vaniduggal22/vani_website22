@@ -1,0 +1,311 @@
+---
+title: "Ipsum"
+description: ""
+slug: "ipsum"
+image: pic10.jpg
+keywords: ""
+categories: 
+    - ""
+    - ""
+date: 2017-10-31T21:28:43-05:00
+draft: false
+---
+
+
+```{r, setup, echo=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+```
+
+
+```{r load-libraries, echo=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(GGally)
+library(readxl)
+library(here)
+library(skimr)
+library(janitor)
+library(broom)
+library(tidyquant)
+library(infer)
+library(openintro)
+library(knitr)
+library(scales)                         
+library(data.table)  
+```
+
+
+# Youth Risk Behavior Surveillance
+
+## Exploratory Data Analysis
+
+Using visualization and summary statistics, describe the distribution of weights. How many observations are we missing weights from? Use also the skim function.
+
+```{r, eda_on_weight}
+
+data(yrbss)
+
+# Create summary statistics
+summary(yrbss$weight)
+skimr::skim(yrbss)
+
+# Plot missing values
+kable(yrbss%>%
+  filter(is.na(weight))%>%
+  summarise(Toatal_missing_data=n()),"simple")
+
+# Create histogram
+x <- yrbss$weight 
+h<-hist(x,  
+        xlab="weight", main="Histogram with Normal Curve") 
+
+# Create normal distribution as comparison
+xfit<-seq(min(x,na.rm = TRUE),max(x,na.rm = TRUE),length=40)               #  order the data 
+yfit<-dnorm(xfit,mean=mean(x,na.rm = TRUE),sd=sd(x,na.rm = TRUE))          #  density of normal dis
+yfit <- yfit*diff(h$mids[1:2])*length(x) 
+lines(xfit, yfit, col="red", lwd=2) 
+
+
+```
+**Answer:**\
+
+The minimum value of weight is 30, the maximum value is 181, the median is 64, the lower quantile is 56, the upper quantile is 76, and the total number of missing values is 1004. The distribution of weights looks lightly skewed to the right. We added a normal distribution line as comparison.\
+
+
+
+Let’s create a new variable in the dataframe `yrbss`, called `physical_3plus` , which will be `yes` if they are physically active for at least 3 days a week, and `no` otherwise. Use the `count()` function and see if you get the same results as `group_by()... summarise()`. Also plot your data.
+  
+```{r, mutate_and_count}
+
+# Create new variable
+yrbss$physical_3plus<-ifelse(yrbss$physically_active_7d>=3,"yes","no")
+
+# Method group_by()... summarise()
+yrbss%>%
+  group_by(physical_3plus)%>%
+  summarise(n=n())%>%
+  mutate(prop=label_percent()(n/nrow(yrbss)))
+
+# Method count()
+yrbss%>%
+count(physical_3plus) %>% 
+mutate(prop=label_percent()(n/nrow(yrbss)))
+
+# Create a graph to show difference
+yrbss%>%
+  filter(is.na(physical_3plus)==FALSE)%>%
+  group_by(physical_3plus)%>%
+  summarise(number=n())%>%
+ggplot(aes(x=physical_3plus,y=number))+
+  geom_bar(stat = "identity",width =0.5)+
+  labs(x="physical_3plus",y="number")+
+  ggtitle("How many children workout 3plus times?",
+          subtitle = "")+
+  theme_bw()
+
+```
+**Answer:**\
+
+In this first analysis we have separately shown the percentage proportion also for the NA values. 8906 kids practice sport 3plus times a week while 4404 do not. In the graph we have not included the NA values.
+
+
+## Confidence Interval for Proportion 3plus
+
+Can you provide a 95% confidence interval for the population proportion of high schools that are *NOT* active 3 or more days per week?
+
+```{r, confidence_interval}
+
+#Filtering data
+
+test<-yrbss %>% 
+  filter(is.na(physical_3plus)==FALSE)%>%
+  
+# Changing yes no to numerical value to make it easier  
+  mutate(physical_3_p=ifelse(physical_3plus=="yes",1,0), physical_3_l=ifelse(physical_3plus=="no",1,0))
+
+
+# With formula
+
+ci_yrbss <- test %>% 
+  filter(!is.na(physical_3plus)) %>%
+  summarize(count = n(),
+            p = (sum(physical_3plus == "no"))/count,
+            t_critical = qt(0.975, count-1),
+            se_diff = sqrt(p*(1-p)/count),
+            margin_of_error = t_critical * se_diff,
+            prop_low = p - margin_of_error,
+            prop_high = p + margin_of_error)
+
+# print the table with confidence interval
+
+kable(ci_yrbss,
+      caption="CI 3 or more times active Formula")
+
+
+# Confidence Interval with bootstrap  
+
+set.seed(1234)
+boot_3lower <- test %>% 
+# Select
+  filter(is.na(physical_3plus)==FALSE)%>%                  
+# Specify the variable of interest
+  specify(response = physical_3_l) %>%
+# Generate a bunch of bootstrap samples
+  generate(reps = 1000, type = "bootstrap") %>%
+  calculate(stat = "mean") 
+
+percentile_ci<- boot_3lower %>% 
+   get_confidence_interval(level=0.95, type="percentile")
+kable(percentile_ci,
+      caption="CI 3 or more times active Infer")
+
+```
+
+
+**Answer:**\
+
+The 95% confidence interval is [0.323,0.339] calculated with both, formula and bootstrap.
+
+## Boxplot 3plus
+  
+Make a boxplot of `physical_3plus` vs. `weight`. Is there a relationship between these two variables? What did you expect and why?
+
+```{r, boxplot}
+
+# Create boxplot
+
+yrbss%>%
+  filter(is.na(physical_3plus)==FALSE)%>%
+ggplot(aes(x=physical_3plus,y=weight))+
+  geom_boxplot()+
+  ggtitle("The boxplot of the weight of physical_3plus",
+          subtitle = "")+
+  theme_bw()
+
+```
+
+**Answer:**\
+
+Although almost similiar, there is a positive relationship between being physically active for at least 3 days a week and weight. The result is somehow counter-intuitive, since we thought that more exercise in children would reduce there weight. This might be explained by the reason that people who stay highly active take part of physically demanding sports like basket, football and similiar and have thus a higher percentage of muscle or are just bigger. One additional reason could be that kids who are slightly heavier are more incentivised to exercise more frequently.
+
+
+## Confidence Interval Weight by Formula
+
+Calculate the mean, SD, etc. weight in these groups using the mean function, we must ignore any missing values by setting the `na.rm = TRUE`and define confidence interval.
+
+
+```{r, ci_using_formulas}
+
+#Apllying formula to weight
+ci_yrbss_weight <- yrbss %>% 
+  filter(is.na(physical_3plus)==FALSE)%>%
+  group_by(physical_3plus) %>% 
+  summarize(mean = mean(weight, na.rm=TRUE),
+            sd = sd(weight, na.rm=TRUE),
+            count = n(),
+            t_critical = qt(0.975, count-1),
+            se_diff = sd/sqrt(count),
+            margin_of_error = t_critical * se_diff,
+            weight_low = mean - margin_of_error,
+            weight_high = mean + margin_of_error)
+
+#Plotting results
+kable(ci_yrbss_weight)
+
+```
+
+There is an observed mean difference of about 1.77kg (68.44 - 66.67), and we notice that the two confidence intervals do not overlap. It seems that the difference is statistically significant at 95% confidence. Let us however also conduct a hypothesis test.
+
+
+## Hypothesis test with formula
+
+Write the null and alternative hypotheses for testing whether mean weights are different for those who exercise at least times a week and those who don’t.\
+
+**Answer:**\
+
+Null Hypothesis: mean weights are same for those who exercise at least 3 times a week and those who don't.\
+
+Alternative hypotheses: mean weights are not same for those who exercise at least times a week and those who don't.\
+
+From the calculation below and the output of t.test, confidence interval and p-value , we can infer that the Null Hypothesis can be rejected and alternative hypotheses accepted.
+
+```{r, t_test_using_R}
+
+t.test(weight ~ physical_3plus, data = yrbss)
+
+```
+
+
+## Hypothesis test with `infer`
+
+
+First, we need to initialize the test, which we will save as `obs_diff`.
+
+```{r, calc_obs_difference}
+
+yrbss_filtered<-yrbss%>%
+  filter(is.na(physical_3plus)==FALSE,is.na(weight)==FALSE)
+
+obs_diff <- yrbss_filtered %>%
+  specify(weight ~ physical_3plus) %>%
+  calculate(stat = "diff in means", order = c("yes", "no"))
+
+obs_diff
+
+```
+
+
+After you have initialized the test, you need to simulate the test on the null distribution, which we will save as null.
+
+
+```{r, hypothesis_testing_using_infer_package}
+
+null_dist <- yrbss_filtered %>%
+  # specify variables
+  specify(weight ~ physical_3plus) %>%
+  
+  # assume independence, i.e, there is no difference
+  hypothesize(null = "independence") %>%
+  
+  # generate 1000 reps, of type "permute"
+  generate(reps = 1000, type = "permute") %>%
+  
+  # calculate statistic of difference, namely "diff in means"
+  calculate(stat = "diff in means", order = c("yes", "no"))
+
+```
+
+
+We can visualize this null distribution with the following code:
+
+```{r}
+ggplot(data = null_dist, aes(x = stat)) +
+  geom_histogram()
+
+```
+
+
+We can also calculate the p-value for your hypothesis test using the function `infer::get_p_value()`.
+
+```{r}
+
+null_dist %>% visualize() +
+  shade_p_value(obs_stat = obs_diff, direction = "two-sided")
+
+null_dist %>%
+  get_p_value(obs_stat = obs_diff, direction = "two_sided")
+
+```
