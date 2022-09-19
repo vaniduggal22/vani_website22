@@ -19,8 +19,8 @@ disqusShortname = ""
   # CSS class.
 
   # Provide your metadata here.
-  name = "Your name"
-  description = "Your description"
+  name = "Vani Duggal"
+  description = "Student at London Business School"
 
   # Link custom assets relative to /static
   custom_css = []
@@ -82,7 +82,7 @@ disqusShortname = ""
     # To change the background image on the homepage banner, replace 'banner.jpg' in
     # the 'static/img' folder.
     title = "Hi, my name is Vani"
-    subtitle = "A RESPONSIVE SITE TEMPLATE DESIGNED BY HTML5 UP\nAND RELEASED UNDER THE CREATIVE COMMONS."
+    #subtitle = "A RESPONSIVE SITE TEMPLATE DESIGNED BY HTML5 UP\nAND RELEASED UNDER THE CREATIVE COMMONS."
     buttonText = "Get Started"
 
 
@@ -93,39 +93,39 @@ disqusShortname = ""
     
     [[params.tiles.showcase]]
       title = "About Me"
-      subtitle = "Ipsum Dolor Sit Amet"
-      image = "pic01.jpg"
+      #subtitle = "Ipsum Dolor Sit Amet"
+      image = "me.jpeg"
       url = "blogs/aliquam"
 
     [[params.tiles.showcase]]
       title = "Renewable Energy Analysis"
-      subtitle = "Analysis"
+      #subtitle = "Analysis"
       image = "energy.jpeg"
       url = "blogs/tempus"
 
     [[params.tiles.showcase]]
       title = "San Francisco Rent Analysis"
-      subtitle = "Lorem Etiam Nullam"
+      #subtitle = "Lorem Etiam Nullam"
       image = "sanfr.jpeg"
       url = "blogs/magna"
 
     [[params.tiles.showcase]]
       title = "Youth Risk Behavior Analysis"
-      subtitle = "Nisl Sed Aliquam"
+      #subtitle = "Nisl Sed Aliquam"
       image = "youth.jpeg"
       url = "blogs/ipsum"
 
     [[params.tiles.showcase]]
       title = "Climate change and temperature"
-      subtitle = "Ipsum Dolor Sit Amet"
+      #subtitle = "Ipsum Dolor Sit Amet"
       image = "climate.jpeg"
       url = "blogs/consequat"
 
     [[params.tiles.showcase]]
-      title = "Etiam"
-      subtitle = "Feugiat Amet Tempus"
+      title = "My Resume"
+      #subtitle = "Feugiat Amet Tempus"
       image = "pic06.jpg"
-      url = "blogs/ipsum"
+      url = "blogs/etiam"
     # You can make more showcases by copy and pasting the code above
 
   [params.blog]
@@ -137,15 +137,15 @@ disqusShortname = ""
 
   # Section Type Two
   [params.two]
-    enable = true
-    title = "Massa libero"
-    subtitle = """Nullam et orci eu lorem consequat tincidunt vivamus et sagittis libero. 
-    Mauris aliquet magna magna sed nunc rhoncus pharetra. 
-    Pellentesque condimentum sem. In efficitur ligula tate urna. Maecenas laoreet massa vel lacinia pellentesque lorem ipsum dolor. 
-    Nullam et orci eu lorem consequat tincidunt. Vivamus et sagittis libero.
-    Mauris aliquet magna magna sed nunc rhoncus amet pharetra et feugiat tempus."""
-    buttonText = "Get Started"
-    url = "blogs"
+    #enable = true
+    #title = "Massa libero"
+    #subtitle = """Nullam et orci eu lorem consequat tincidunt vivamus et sagittis libero. 
+    #Mauris aliquet magna magna sed nunc rhoncus pharetra. 
+    #Pellentesque condimentum sem. In efficitur ligula tate urna. Maecenas laoreet massa vel lacinia pellentesque lorem ipsum dolor. 
+    #Nullam et orci eu lorem consequat tincidunt. Vivamus et sagittis libero.
+    #Mauris aliquet magna magna sed nunc rhoncus amet pharetra et feugiat tempus."""
+    #buttonText = "Get Started"
+    #url = "blogs"
 
 
   # Contact section
@@ -181,7 +181,7 @@ disqusShortname = ""
     [[params.contact.address]]
     title = "Address"
     street = "Liverpool Street"
-    city = "City, ST 00000"
+    #city = "City, ST 00000"
     country = "London"
 
   # Footer section
@@ -191,31 +191,31 @@ disqusShortname = ""
 
     # Uses font awesome icons
     [[params.footer.social]]
-      icon = "fa-twitter"
-      url= "https://www.twitter.com"
-      label = "Twitter"
+      #icon = "fa-twitter"
+      #url= "https://www.twitter.com"
+      #label = "Twitter"
 
     [[params.footer.social]]
       icon = "fa-facebook"
-      url= "https://www.facebook.com"
+      url= "https://www.facebook.com/vani.duggal.3"
       label = "Facebook"
 
     [[params.footer.social]]
       icon = "fa-instagram"
-      url= "https://www.instagram.com"
+      url= "https://www.instagram.com/vaniiduggal/"
       label = "Instagram"
     
     [[params.footer.social]]
       icon = "fa-github"
-      url= "https://www.github.com"
+      url= "https://github.com/vaniduggal22"
       label = "GitHub"
 
     [[params.footer.social]]
       icon = "fa-linkedin"
-      url= "https://www.linkedin.com"
+      url= "https://www.linkedin.com/in/vani-duggal/"
       label = "LinkedIn"
 
-    [[params.footer.quicklinks]]
-      text = "Design: "
-      url= "https://www.html5up.net"
-      alt = "HTML5 UP"
+    #[[params.footer.quicklinks]]
+     # text = "Design: "
+      #url= "https://www.html5up.net"
+      #alt = "HTML5 UP"
