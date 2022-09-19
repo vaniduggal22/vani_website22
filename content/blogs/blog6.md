@@ -2,7 +2,7 @@
 title: "About Me"
 description: ""
 slug: "aliquam"
-image: pic07.jpg
+image: me.jpeg
 keywords: ""
 categories: 
     - ""
