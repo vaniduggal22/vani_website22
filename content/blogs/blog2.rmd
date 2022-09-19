@@ -2,7 +2,7 @@
 title: "San Francisco Rent Analysis"
 description: "Lorem Etiam Nullam"
 slug: "magna"
-image: sanf.jpeg
+image: sanfr.jpeg
 keywords: ""
 categories: 
     - ""

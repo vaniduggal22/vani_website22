@@ -106,7 +106,7 @@ disqusShortname = ""
     [[params.tiles.showcase]]
       title = "San Francisco Rent Analysis"
       subtitle = "Lorem Etiam Nullam"
-      image = "sanf.jpeg"
+      image = "sanfr.jpeg"
       url = "blogs/magna"
 
     [[params.tiles.showcase]]
