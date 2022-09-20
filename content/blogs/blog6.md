@@ -10,11 +10,13 @@ categories:
 date: 2017-10-31T22:42:51-05:00
 draft: false
 ---
-Hi! I'm Vani. 
+Hi, I'm Vani!
 
-I enjoy discovering the power of R & python for data analysis and visualization and this site is where I share what I learn and my latest work. Inspired by the helpful R community on Twitter and personal blogs I've discovered, I decided to share my learnings in hopes of helping others like those resources help me. I believe in the importance of communicating data-driven insights to all audiences and have grown a particular interest in data visualization and data storytelling. 
+Currently I am an Analytics student at London Business School. I like using data and numbers to find interesting and surprising insights about things around the world. This website is an attempt at sharing the same with the world. I hope it helps you in one way or the other.
 
-I have an academic background in statistics, professional experience in consulting at SAS, and am currently a Data and Reporting Analyst. 
+I have an academic background in Economics and love numbers. I aim to work as a Business Analyst in the Consumer Goods industry. 
+
+Feel free to reach out to me for anything data!
 
 
 
